@@ -1,0 +1,176 @@
+*{
+    margin:0;
+    padding: 0;
+    font-size:16px;
+}
+
+#head{
+    width:100%;
+    height: 47px;
+    top:0px;
+    background-image: url("../images/head_background.png");
+    background-repeat: repeat-x;
+    position: fixed;
+    z-index:900;
+
+}
+
+#body{
+    margin-top: 48px;
+
+    width:911px;
+    min-height:800px;
+    margin-left:auto;
+    margin-right: auto;//水平方向上都设置为auto，则它们会被设置为相等的长度。以此来进行元素本身的对其，元素内部文本的对齐用的是text-align。
+
+}
+
+#main{
+    width:586px;
+    min-height:800px;
+    float: left;
+
+
+}
+
+#side_bar{
+    width:272px;
+    min-height:800px;
+    float: right;
+
+}
+
+#foot{
+    width:911px;
+    height:64px;
+}
+
+.dialog{
+    height:auto;
+    width:500px;
+    border:1px solid gray;
+    position:fixed;
+    background:white;
+    margin:auto; /* 由于left right top bottom都为0，所以系统只能设置margin。而auto又使得左右外边距相等，上下外边距相等。 */
+    left:0;
+    right:0;
+    /* top:0;
+    bottom:0; */ /* 上下最好不要居中，否则如果打开F12，会导致登录框被顶部栏覆盖。 */
+    top:200px;
+    padding-top:30px;
+    z-index:1000;
+}
+
+
+#question_form{
+    top:100px;
+}
+
+.edui-container{
+	margin:0 auto;
+}
+
+label{
+    font-size:24px;
+    padding:0 20px;
+}
+
+input[type="text"],input[type="password"]{
+    height:30px;
+    width:300px;
+    line-height:30px;
+
+
+}
+
+.dialog textarea{
+    width:300px;
+    height:150px;
+
+}	/* 样式后面不能加分号，否则可能导致其他样式失效。 */
+
+.dialog p{
+    padding:10px 0;
+    color:gray;
+   
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.form_button{
+	text-align:center;
+}
+
+.dialog_button{
+    height:30px;
+    width:100px;
+    color:#555;
+    font-size:16px;
+    margin:10px 10px;
+
+}
+
+#login_entry{
+    line-height:47px;
+    color:white;
+    float:right;
+    padding-right:100px;
+}
+
+#login_entry a{
+    color:white;
+    text-decoration: none;
+    padding:10px;
+}
+
+#head div{
+    float: left;
+    height:47px;
+
+    margin-left:210px;
+
+
+
+}
+
+#head div span{
+    font-size: 40px;
+
+    color: white;
+    font-family: 隶书;
+    vertical-align:middle;
+}
+
+#head div input{
+
+    vertical-align:middle;
+}
+
+#head div input[type="button"]{
+    width:100px;
+    height:30px;
+}
+
+.comment_list{
+    border:1px solid gray;
+    margin-bottom:40px;
+    padding:10px 20px 20px 20px;
+}
+
+.comment_list button{
+    display: block;
+}
+.comment_list button{
+    margin-left: 200px;
+}
+
+a:visited{
+	color:blue;
+	font-size:24px;
+}
+
+a{
+	color:blue;
+	text-decoration:none;
+	font-size:18px;
+}

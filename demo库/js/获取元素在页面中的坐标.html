@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>获取元素在可视区中的坐标</title>
+
+    <style>
+        #p1{
+            width:100px;
+            height: 100px;
+            background: red;
+        }
+        #p2{
+            width:100px;
+            height: 100px;
+            background: green;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <p id="p1">1</p>
+        <p id="p2">2</p>
+    </div>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+
+    <script>
+        /*
+        基础概念：
+         offsetLeft : Returns the horizontal offset position of the current element relative to its offset container
+         offsetParent : Returns the offset container of an element
+         offsetTop : Returns the vertical offset position of the current element relative to its offset container
+         */
+
+        //获取元素的纵坐标 start
+        function getTop(e){
+            var offset=e.offsetTop;
+            if(e.offsetParent!=null) offset+=getTop(e.offsetParent);
+            return offset;
+        }
+        //获取元素的纵坐标 end
+
+        //获取元素的横坐标 start
+        function getLeft(e){
+            var offset=e.offsetLeft;
+            if(e.offsetParent!=null) offset+=getLeft(e.offsetParent);
+            return offset;
+        }
+        //获取元素的横坐标 end
+
+        alert("p1(left,top)=(" + getLeft( document.getElementById("p1") ) + "," + getTop( document.getElementById("p1")) + ")" );
+        alert("p2(left,top)=(" + getLeft( document.getElementById("p2") ) + "," + getTop( document.getElementById("p2")) + ")" );
+
+        window.setTimeout(function(){
+            alert("p2(left,top)=(" + getLeft( document.getElementById("p2") ) + "," + getTop( document.getElementById("p2")) + ")" );
+        },1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>获取元素宽度和高度</title>
+
+    <style>
+        #p1{
+            width:200px;
+            height: 100px;
+            background: red;
+        }
+    </style>
+</head>
+<body>
+
+    <p id="p1">1</p>
+
+    <script>
+        /*
+            offsetHeight: Returns the height of an element, including borders and padding if any, but not margins
+            offsetWidth: Returns the width of an element, including borders and padding if any, but not margins
+        */
+
+        alert("offsetWidth ： " + document.getElementById("p1").offsetWidth);
+        alert("offsetHeight ： " + document.getElementById("p1").offsetHeight);
+    </script>
+
+</body>
+</html>

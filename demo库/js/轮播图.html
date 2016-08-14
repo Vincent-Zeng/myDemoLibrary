@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>轮播图</title>
+
+    <style>
+        body {
+            background: #666;
+        }
+        ul {
+            padding: 0; margin: 0;
+        }
+        li {
+            list-style: none;
+        }
+        img {
+            border: 0;
+        }
+
+        .play {
+            width: 400px;
+            height: 430px;
+            margin: 50px auto 0;
+            background: #999;
+            font: 12px Arial;
+        }
+
+        .big_pic {
+            /*只显示一个图 start*/
+            width: 400px;
+            height: 320px;
+            overflow: hidden;
+            /*只显示一个图 end*/
+            border-bottom: 1px solid #ccc;
+            background: #222;
+            position: relative;
+        }
+
+        .big_pic li {
+            width: 400px;
+            height: 320px;
+            overflow: hidden;
+            /*把所有图都放在一个位置，即所有图叠在一起 start*/
+            position: absolute;
+            top: 0;
+            left: 0;
+            /*把所有图都放在一个位置，即所有图叠在一起 end*/
+            z-index: 0;
+            background: url(../images/loading.gif) no-repeat center center; /*图片还未加载出来前则显示这个表示加载中的背景图*/
+        }
+
+        .mark_left {
+            width: 200px;
+            height: 320px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: red;
+            filter: alpha(opacity:0);
+            opacity: 0;
+            z-index:3000;
+        }
+        .mark_right {
+            width: 200px;
+            height: 320px;
+            position: absolute;
+            left: 200px;
+            top: 0;
+            background: green;
+            filter: alpha(opacity:0);
+            opacity: 0;
+            z-index:3000;
+        }
+        .big_pic .prev {
+            width: 60px;
+            height: 60px;
+            background: url(../images/btn.gif) no-repeat;   /*左右箭头背景图*/
+            position: absolute;
+            top: 130px;
+            left: 10px;
+            z-index: 3001;
+            filter:alpha(opacity:0);
+            opacity:0;
+            cursor: pointer;
+        }
+
+        .big_pic .next {
+            width: 60px;
+            height: 60px;
+            background: url(../images/btn.gif) no-repeat 0 -60px;
+            position: absolute;
+            top: 130px;
+            right: 10px;
+            z-index: 3001;
+            filter:alpha(opacity:0);
+            opacity:0; cursor: pointer;
+        }
+
+        .big_pic .text {
+            position: absolute;
+            left: 10px;
+            top: 302px;
+            z-index: 3000;
+            color: #ccc;
+        }
+
+        .big_pic .length {
+            position: absolute;
+            right: 10px;
+            bottom: 4px;
+            z-index: 3000;
+            color: #ccc;
+        }
+
+        /*？？*/
+        .big_pic .bg {
+            width: 400px;
+            height: 25px;
+            background: #000;
+            filter: alpha(opacity=60);
+            opacity: 0.6;
+            position: absolute;
+            z-index: 2999;
+            bottom: 0;
+            left: 0;
+        }
+
+        .small_pic {
+            width: 380px;
+            height: 94px;
+            position: relative;
+            /*使得图片列表看起来有边框start*/
+            top: 7px;
+            left: 10px;
+            /*使得图片列表看起来有边框end*/
+            overflow: hidden;
+        }
+        .small_pic ul {
+            height: 94px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .small_pic li {
+            width: 120px;
+            height: 94px;
+            float: left;    /*小图是浮动的，即依次排列（上面大图是重叠）*/
+            padding-right: 10px;    /*使得小图看起来有边框*/
+            background: url(../images/loading.gif) no-repeat center center;
+            cursor: pointer;
+            filter: alpha(opacity=60);
+            opacity: 0.6;
+        }
+        .small_pic img {
+            width: 120px;
+            height: 94px;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div id="playimages" class="play">
+        <ul class="big_pic">
+
+            <!--左右箭头 start-->
+            <div class="prev"></div>
+            <div class="next"></div>
+            <!--左右箭头 end-->
+
+            <div class="text">加载图片说明……</div>
+            <div class="length">计算图片数量……</div>
+
+            <!--在图片上加上两个透明的元素，这样元素就代表了图片左右两个区域 start-->
+            <a class="mark_left" href="javascript:;"></a>
+            <a class="mark_right" href="javascript:;"></a>
+            <!--在图片上加上两个透明的元素，这样元素就代表了图片左右两个区域 end-->
+            <div class="bg"></div>
+
+            <li style="z-index:1;"><img src="../images/1.jpg" /></li>
+            <li><img src="../images/2.jpg" /></li>
+            <li><img src="../images/3.jpg" /></li>
+            <li><img src="../images/4.jpg" /></li>
+            <li><img src="../images/5.jpg" /></li>
+            <li><img src="../images/6.jpg" /></li>
+        </ul>
+        <div class="small_pic">
+            <ul style="width:390px;">
+                <li style="filter: 100; opacity: 1;"><img src="../images/1.jpg" /></li>
+                <li><img src="../images/2.jpg" /></li>
+                <li><img src="../images/3.jpg" /></li>
+                <li><img src="../images/4.jpg" /></li>
+                <li><img src="../images/5.jpg" /></li>
+                <li><img src="../images/6.jpg" /></li>
+            </ul>
+        </div>
+    </div>
+
+
+    <script>
+        //任意值运动框架   start
+        function getStyle(obj, name)
+        {
+            if(obj.currentStyle)
+            {
+                return obj.currentStyle[name];
+            }
+            else
+            {
+                return getComputedStyle(obj, false)[name];
+            }
+        }
+
+        function startMove(obj, attr, iTarget)
+        {
+            clearInterval(obj.timer);
+            obj.timer=setInterval(function (){
+                var cur=0;
+
+                if(attr=='opacity')
+                {
+                    cur=Math.round(parseFloat(getStyle(obj, attr))*100);
+                }
+                else
+                {
+                    cur=parseInt(getStyle(obj, attr));
+                }
+
+                var speed=(iTarget-cur)/6;
+                speed=speed>0?Math.ceil(speed):Math.floor(speed);
+
+                if(cur==iTarget)
+                {
+                    clearInterval(obj.timer);
+                }
+                else
+                {
+                    if(attr=='opacity')
+                    {
+                        obj.style.filter='alpha(opacity:'+(cur+speed)+')';
+                        obj.style.opacity=(cur+speed)/100;
+
+                        document.getElementById('txt1').value=obj.style.opacity;
+                    }
+                    else
+                    {
+                        obj.style[attr]=cur+speed+'px';
+                    }
+                }
+            }, 30);
+        }
+        //任意值运动框架   end
+
+        //根据类名获取元素的函数 start
+        function getByClass(oParent, sClass)
+        {
+            var aEle=oParent.getElementsByTagName('*');
+            var aResult=[];
+
+            for(var i=0;i<aEle.length;i++)
+            {
+                if(aEle[i].className==sClass)
+                {
+                    aResult.push(aEle[i]);
+                }
+            }
+
+            return aResult;
+        }
+        //根据类名获取元素的函数 end
+
+        window.onload=function ()
+        {
+            var oDiv=document.getElementById('playimages');
+            var oBtnPrev=getByClass(oDiv, 'prev')[0];
+            var oBtnNext=getByClass(oDiv, 'next')[0];
+            var oMarkLeft=getByClass(oDiv, 'mark_left')[0];
+            var oMarkRight=getByClass(oDiv, 'mark_right')[0];
+
+            var oDivSmall=getByClass(oDiv, 'small_pic')[0];
+            var oUlSmall=oDivSmall.getElementsByTagName('ul')[0];
+            var aLiSmall=oDivSmall.getElementsByTagName('li');
+
+            var oUlBig=getByClass(oDiv, 'big_pic')[0];
+            var aLiBig=oUlBig.getElementsByTagName('li');
+
+            var nowZIndex=2;
+
+            var now=0;
+
+            oUlSmall.style.width=aLiSmall.length*aLiSmall[0].offsetWidth+'px';
+
+            //左右按钮的出现与消失控制 start
+            oBtnPrev.onmouseover=oMarkLeft.onmouseover=function ()  //因为prev元素的z-index设置得比MarkLeft高，所以移入prev元素则会移出MarkLeft导致prev元素完全透明，所以也要设置prev元素的onmouseover事件
+            {
+                startMove(oBtnPrev, 'opacity', 100);
+            };
+            oBtnPrev.onmouseout=oMarkLeft.onmouseout=function ()
+            {
+                startMove(oBtnPrev, 'opacity', 0);
+            };
+            oBtnNext.onmouseover=oMarkRight.onmouseover=function ()
+            {
+                startMove(oBtnNext, 'opacity', 100);
+            };
+            oBtnNext.onmouseout=oMarkRight.onmouseout=function ()
+            {
+                startMove(oBtnNext, 'opacity', 0);
+            };
+            //左右按钮的出现与消失控制 end
+
+            //点击小图则大图切换 start
+            for(var i=0;i<aLiSmall.length;i++)
+            {
+                aLiSmall[i].index=i;
+                aLiSmall[i].onclick=function ()
+                {
+                    if(this.index==now)return;  //如果是当前大图就是点击的小图对应的图片，则不进行切换（防止自身切换到自身时从上往下的图片展开）。
+
+                    now=this.index;
+
+                    tab();
+                };
+
+                //移入小图则小图不透明，移出则微透明 satrt
+                aLiSmall[i].onmouseover=function ()
+                {
+                    startMove(this, 'opacity', 100);
+                };
+                aLiSmall[i].onmouseout=function ()
+                {
+                    if(this.index!=now)     //判断条件保证切到的小图始终不透明
+                    {
+                        startMove(this, 'opacity', 60);
+                    }
+                };
+                //移入小图则小图不透明，移出则微透明 end
+            }
+            //点击小图则大图切换 end
+
+            //切换函数 start
+            function tab()
+            {
+                //防止图片的z-index比左右箭头的z-index高 start
+                if(nowZIndex > 20)
+                {
+                    nowZIndex = 1;
+                    for(var i = 0;i < aLiBig.length;i++)
+                    {
+                        aLiBig[i].style.zIndex = 0;
+                    }
+
+                }
+                //防止图片的z-index比左右箭头的z-index高 end
+
+                aLiBig[now].style.zIndex=nowZIndex++;
+
+                //其他小图微透明，切到的小图不透明start
+                for(var i=0;i<aLiSmall.length;i++)
+                {
+                    startMove(aLiSmall[i], 'opacity', 60);
+                }
+
+                startMove(aLiSmall[now], 'opacity', 100);
+                //其他小图微透明，切到的小图不透明end
+
+                //把切换到的大图从上往下展开 start
+                aLiBig[now].style.height=0;
+                startMove(aLiBig[now], 'height', 320);
+                //把切换到的大图从上往下展开 end
+
+                if(now==0)
+                {
+                    startMove(oUlSmall, 'left', 0);     //小图列表向右滑动，直到小图列表左边界滑动到父元素左边界
+                }
+                else if(now==aLiSmall.length-1)
+                {
+                    startMove(oUlSmall, 'left', -(now-2)*aLiSmall[0].offsetWidth);  //如果是切换到最后一个小图，则小图列表不滑动
+                }
+                else
+                {
+                    startMove(oUlSmall, 'left', -(now-1)*aLiSmall[0].offsetWidth);  //小图列表向左滑动一个小图的宽度。
+                }
+            }
+            //切换函数 end
+
+            //左右箭头切换 start
+            oBtnPrev.onclick=function ()
+            {
+                now--;
+                if(now==-1)
+                {
+                    now=aLiSmall.length-1;
+                }
+
+                tab();
+            };
+
+
+            oBtnNext.onclick=function ()
+            {
+                now++;
+                if(now==aLiSmall.length)
+                {
+                    now=0;
+                }
+
+                tab();
+            };
+            //左右箭头切换 end
+
+
+            var timer=setInterval(oBtnNext.onclick, 2000);  //定时切换
+
+            //鼠标移入轮播图区域则停止图片定时切换，移出则开启图片定时切换 start
+            oDiv.onmouseover=function ()
+            {
+                clearInterval(timer);
+            };
+            oDiv.onmouseout=function ()
+            {
+                timer=setInterval(oBtnNext.onclick, 2000);
+            };
+            //鼠标移入轮播图区域则停止图片定时切换，移出则开启图片定时切换 end
+
+        };
+
+    </script>
+
+</body>
+</html>

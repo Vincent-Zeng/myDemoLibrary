@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>分页</title>
+</head>
+<body>
+    <div id="page"></div>
+    <script>
+                function setPage(opt){
+                    if(!opt.pageDivId || opt.allPageNum < opt.curpageNum || opt.allPageNum < opt.showPageNum){return false};
+                    var allPageNum = opt.allPageNum; //总的页数
+                    var showPageNum = opt.showPageNum; //显示的页数
+                    var curpageNum = opt.curpageNum; // 当前的页数
+                    var pageDIvBox = document.getElementById(opt.pageDivId);
+                    //左边或右边显示页码的个数
+                    var lrNum = Math.floor(showPageNum/2);
+
+                    {
+                        var oA = document.createElement('a');
+                        oA.href = '#1';
+                        oA.innerHTML = '首页'
+                        pageDIvBox.appendChild(oA);
+                    }
+
+                    {
+                        var oA = document.createElement('a');
+                        if(curpageNum - 1 < 0)
+                        {
+                            oA.href='#'+ 0;
+                        }
+                        else
+                            oA.href='#'+(curpageNum-1);
+                        oA.innerHTML = '上一页'
+                        pageDIvBox.appendChild(oA);
+                    }
+                    if(curpageNum<showPageNum-2 || allPageNum == showPageNum){
+                        for(var i=1;i<=showPageNum;i++){
+                            var oA = document.createElement('a');
+                            oA.href = '#'+i;
+                            if(curpageNum==i){
+                                oA.innerHTML = i;
+                            }else{
+                                oA.innerHTML = "[" + i + "]";
+                            }
+                            pageDIvBox.appendChild(oA);
+                        }
+                    }else{
+//倒数第一页的处理
+                        if(allPageNum-curpageNum<lrNum && curpageNum == allPageNum-1){
+                            for(var i=1;i<=showPageNum;i++){
+                                console.log((curpageNum - showPageNum + i));
+                                var oA = document.createElement('a');
+                                oA.href = '#'+ (curpageNum - (showPageNum-1) + i);
+                                if(curpageNum == (curpageNum - (showPageNum-1) + i)){
+                                    oA.innerHTML = (curpageNum - (showPageNum-1) + i)
+                                }else{
+                                    oA.innerHTML = '['+(curpageNum - (showPageNum-1) + i)+']'
+                                }
+                                pageDIvBox.appendChild(oA);
+                            }
+                        }
+//最后一页的处理
+                        else if(allPageNum-curpageNum<lrNum && curpageNum == allPageNum){
+                            for(var i=1;i<=showPageNum;i++){
+                                console.log((curpageNum - showPageNum + i));
+                                var oA = document.createElement('a');
+                                oA.href = '#'+ (curpageNum - showPageNum + i);
+                                if(curpageNum == (curpageNum - showPageNum + i)){
+                                    oA.innerHTML = (curpageNum - showPageNum + i)
+                                }else{
+                                    oA.innerHTML = '['+(curpageNum-showPageNum + i)+']'
+                                }
+                                pageDIvBox.appendChild(oA);
+                            }
+                        }else{
+                            for(var i=1;i<=showPageNum;i++){
+                                var oA = document.createElement('a');
+                                oA.href = '#'+ (curpageNum - (showPageNum-lrNum) + i);
+                                if(curpageNum == (curpageNum - (showPageNum-lrNum) + i)){
+                                    oA.innerHTML = (curpageNum - (showPageNum-lrNum) + i)
+                                }else{
+                                    oA.innerHTML = '['+(curpageNum - (showPageNum-lrNum) + i)+']'
+                                }
+                                pageDIvBox.appendChild(oA);
+                            }
+                        }
+                    }
+
+                            {
+                                var oA = document.createElement('a');
+                                oA.href='#'+(parseInt(curpageNum)+1);
+                                oA.innerHTML = '下一页';
+                                pageDIvBox.appendChild(oA);
+                            }
+                            {
+                                var oA = document.createElement('a');
+                                oA.href='#'+allPageNum;
+                                oA.innerHTML = '尾页';
+                                pageDIvBox.appendChild(oA);
+                            }
+
+
+                    var oA = document.getElementsByTagName('a');
+//给页码添加点击事件
+                    for(var i=0;i<oA.length;i++){
+                        oA[i].onclick = function(){
+//当前点的页码
+                            var sHref = this.getAttribute('href').substring(1);
+//清空页数显示
+                            pageDIvBox.innerHTML = '';
+                            setPage({
+                                pageDivId:'page',
+                                showPageNum:3, //显示的个数
+                                allPageNum:10, //总页数
+                                curpageNum:sHref //当前页数
+                            })
+                        }
+                    }
+                }
+        window.onload = function(){
+            setPage({
+                pageDivId:'page',
+                showPageNum:3, //显示的个数
+                allPageNum:10, //总页数
+                curpageNum:1 //当前页数
+            })
+        }
+    </script>
+</body>
+</html>

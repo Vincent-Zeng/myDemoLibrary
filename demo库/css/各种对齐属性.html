@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>各种对齐属性</title>
+    <style>
+        /*1 、【行框内各行内框之间的对齐start】*/
+
+           /*
+           vertical-align各个关键字值的效果描述如下：
+            baseline
+            默认。元素放置在父元素（必须是父行内元素）的基线上。
+            top
+            将元素行内框的顶端与包含该元素的行框的顶端对齐。
+            bottom
+            将元素行内框的底端与包含该元素的行框的底端对齐。
+            text-top
+            将元素行内框的顶端与父元素内容区的顶端对齐。
+            text-bottom
+            将元素行内框的底端与父元素内容区的底端对齐。
+            middle
+            将元素【行内框的垂直中点】（不是中线，一般情况下为0.5em）与父元素中线（中线的定义为：中线位于基线的上方，与基线的距离为小写字母x高度（即ex）的一半,大部分浏览器认为1ex = 0.5em，因此会将基线以上四分之一em处作为中线来对齐。）对齐。
+            super
+            将元素的内容区和行内框上移。上移的距离未指定，可能因用户代理的不同而不同。
+            sub
+            与super相同，只不过元素会下移而不是上移。
+            <percentage>
+            将元素上移或下移一定距离。这个距离由相对于元素line-height值指定的一个百分数确定。
+
+            以下都是行内元素的术语：
+            行内框：对于非替换元素，元素行内框的高度刚好等于line-height的值。对于替换元素，元素行内框的高度则恰好等于内容区的高度，因为行间距不应用到替换元素。
+            行框：行框的上边界要位于最高行内框的上边界，而行框的底边要放在最低行内框的下边界。
+            行高：指的是两行之间的基线的距离。
+            基线：并不是汉字的下端沿，而是英文字母"x"的下端沿。
+            */
+
+        .inlineAlign span{
+            font-size:40px;
+            background: red;
+            vertical-align: middle;
+
+        }
+        input{
+            background:green;
+            vertical-align: middle;
+        }
+        .inlineAlign{
+            background:pink;
+            height:100px;
+        }
+
+        strong{
+            font-size:30px;
+        }
+        /*1、 行框内各行内框之间的对齐end*/
+
+        /*【2、   块内的水平对齐 start】*/
+        #form1{
+            width:400px;
+            height:600px;
+            background: red;
+        }
+
+        #form1 p{
+            text-align: center;
+            /*
+            text-align:center表示的是块内各行都居中。
+            由于p没有设置宽度，所以p可以自由扩展到与form宽度相同并且不能笔form宽度更大，所以p中内容相对于p居中对齐相当于p中内容位于form正中。
+            */
+        }
+
+        #form2{
+            width:400px;
+            height:600px;
+            background: red;
+            text-align: center;
+        }
+
+        #form2 p{
+            width:300px;
+            background: pink;
+            /*
+            text-align是可以继承的，此处p继承了 form的text-align:center属性。
+            但同时，我们注意到，p这个块并不在form块内居中。
+            */
+        }
+
+       /* 【2、   块内的水平对齐 end】*/
+
+        /*【3、  块自身的水平或垂直居中 start】*/
+        .blockAlign{
+            height:100px;
+            width:200px;
+            margin:auto; /* 由于left right top bottom都为0，所以系统只能设置margin。而auto又使得左右外边距相等，上下外边距相等。 */
+            left:0;
+            right:0;
+            /* top:0;
+            bottom:0; */ /* 上下最好不要居中，否则如果打开F12，会导致登录框被顶部栏覆盖。 */
+            top:200px;
+        }
+
+        #fixed{
+            position:fixed;
+            background:red;
+        }
+
+        #absolute{
+            position: absolute;
+            background:pink;
+        }
+
+        #relative{
+            position: relative;
+            background:green;
+        }
+
+        #static{
+            position: static;
+            background: gray;
+        }
+
+        /*【3、  块自身的水平或垂直居中 end】*/
+
+        /*【4、  这是块自身的水平居中对齐，而非块之中的块的水平居中对齐】*/
+        #div1{
+            width:300px;
+            height:100px;
+            background: red;
+
+            margin:0 auto;  /*p元素如果不设置高度和宽度，宽度则是父元素宽，高度则是能撑起所有行内元素的高度。div元素如果不设置高度和宽度，宽度则是父元素宽，高度则是能撑起所有子元素的高度。     因此由于p1宽度和父元素相同，所以设置居中和左对齐右对齐没区别，要使盘
+            块内的元素相对p1的父元素居中对齐，还需要设置p1块内元素相对p1居中对齐*/
+        }
+
+        #p1{
+            margin:0 auto;
+            text-align: center;/*p元素如果不设置高度和宽度，宽度则是父元素宽，高度则是能撑起所有行内元素的高度。div元素如果不设置高度和宽度，宽度则是父元素宽，高度则是能撑起所有子元素的高度。     因此由于p1宽度和父元素相同，所以设置居中和左对齐右对齐没区别，要使盘
+            块内的元素相对p1的父元素居中对齐，还需要设置p1块内元素相对p1居中对齐*/
+            background: yellow;
+
+        }
+
+
+        /*【4、  这是块自身的水平居中对齐，而非块之中的块的水平居中对齐】*/
+
+    </style>
+</head>
+<body>
+    <!--1 、【行框内各行内框之间的对齐start】-->
+    <div class="inlineAlign">
+            xx   <!--这些文字是父元素的内容，因此父元素的中线和基线由这个注释前面的这些文字确定-->
+            <span>Xx什么 </span>  <!--这个注释前面这些文字与父元素的中线对齐-->
+            <input type="text" value="Xx" /> <!--这个注释前面这些文字与父元素的中线对齐-->
+            <strong>xx</strong> <!--因为text-align默认是baseline，所以这个注释前面这些元素与父元素的基线对齐-->
+    </div>
+    <!--1 、行框内各行内框之间的对齐end-->
+
+    <hr />
+
+   <!-- 【2、 块内的水平对齐 start】-->
+    <form id="form1">
+        <label for="input1">问题：</label>
+
+        <p>
+            <input type="text" id="input1" />
+        </p>
+        <label for="input2">问题描述：</label>
+        <p>
+            <br />
+            <textarea  id="input2"></textarea>
+        </p>
+        <p>
+            <input type="button" value="发布回答" name="answer_ok" class="dialog_button"/>
+            <input type="button" class="dialog_button" id="cancel_button" value="取消"/>
+        </p>
+    </form>
+    <hr />
+    <form id="form2">
+        <label for="input1">问题：</label>
+
+        <p>
+            <input type="text" id="input1" />
+        </p>
+        <label for="input2">问题描述：</label>
+        <p>
+            <br />
+            <textarea  id="input2"></textarea>
+        </p>
+        <p>
+            <input type="button" value="发布回答" name="answer_ok" class="dialog_button"/>
+            <input type="button" class="dialog_button" id="cancel_button" value="取消"/>
+        </p>
+    </form>
+    <!--【2、 块内的水平对齐 end】-->
+
+    <hr />
+
+    <!--【3、  块自身的水平或垂直居中 start】-->
+    <div class="blockAlign" id="fixed">
+        fixed:相对于浏览器视口进行定位。
+    </div>
+
+    <div class="blockAlign" id="absolute">
+        absolute:相对于第一个非static父元素进行定位.
+    </div>
+
+    <div class="blockAlign" id="static">
+        static:默认值。没有定位，元素出现在正常的流中（忽略 top, bottom, left, right 或者 z-index 声明）。
+    </div>
+
+    <div class="blockAlign" id="relative">
+        relative:相对于其原位置进行定位.
+    </div>
+    <!--【3、  块自身的水平或垂直居中 start】-->
+
+    <hr />
+
+    <!--【4、  这是块自身的水平居中对齐，而非块之中的块的水平居中对齐 start】-->
+    <p id="p1">
+        <textarea></textarea> <!--textarea是行内元素-->
+        <div id="div1"></div>
+    </p>
+    <!--【4、  这是块自身的水平居中对齐，而非块之中的块的水平居中对齐 start】-->
+
+</body>
+</html>

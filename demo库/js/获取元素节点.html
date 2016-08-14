@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>获取元素节点</title>
+
+</head>
+<body>
+    <ul>
+        <li id="li1">1</li>
+        <li class="li2">2</li>
+        <li name="li3">3</li>
+        <p>4</p>
+    </ul>
+    <div name="div1">5</div>
+</body>
+
+<script>
+    //1、    【根据ID获得元素 start】
+    var e1 = document.getElementById("li1"); //它是document对象特有的函数，只能通过其来调用该方法。
+    // 该方法兼容主流浏览器，甚至包括IE6+，可以大胆使用。
+    //1、    根据ID获得元素 end
+
+    //2、    【根据标签名获得元素 start】
+    var e2 = document.getElementsByTagName("p")[0];    //该方法兼容主流浏览器，甚至包括IE6+，可以大胆使用。
+    var temp = document.getElementsByTagName("ul")[0];
+    var e3 = temp.getElementsByTagName("p")[0];  //该方法除了能被document对象调用之外，还可以被普通的元素调用。
+    //2、    根据标签名获得元素end
+
+    //3、    【根据类名获得元素start】
+        //由于该方法比较新，较老的浏览器还不支持，比如IE8及之前。不过我们可以通过hack方式来弥补老浏览器缺陷。start
+    function getElementsByClassName(node,classname){
+        if(node.getElementsByClassName) {
+            return node.getElementsByClassName(classname);
+        }else {
+            var results = [];
+            var elems = node.getElementsByTagName("*");     //可以看出，由于是查询所有标签，所以当node是document时会影响性能，尽量不要用。
+            for(var i = 0; i < elems.length; i++){
+                if(elems[i].className.indexOf(classname) != -1){
+                    results[results.length] = elems[i];
+                }
+            }
+            return results;
+        }
+    }
+        //由于该方法比较新，较老的浏览器还不支持，比如IE8及之前。不过我们可以通过hack方式来弥补老浏览器缺陷。end
+    var e4 = getElementsByClassName(document,"li2")[0];
+    //3、    根据类名获得元素end
+
+    //4、    【根据name获得元素start】
+        /*兼容所有浏览器，除了在IE7及以下有些节点是没有name 属性的，就是用document.getElementsByName获取不到的。只有下面的tag有name属性：
+         A, APPLET, attribute, BUTTON, EMBED, FORM, IMG, INPUT type=button, INPUT type=checkbox, INPUT type=file, INPUT type=hidden, INPUT type=image, INPUT type=password, INPUT type=radio, INPUT type=reset, INPUT type=submit, INPUT type=text, LINK, MAP, OBJECT, RT, RUBY, SELECT, TEXTAREA
+         其他都没有，比如 div，span等。*/
+        //IE7及以下兼容性解决办法 start
+    function getElementsByName(tag, name) {
+        var returns = document.getElementsByName(name);
+        if (returns.length > 0)
+            return returns;
+        returns = new Array();
+        var e = document.getElementsByTagName(tag);
+        for (var i = 0; i < e.length; i++) {
+            if (e[i].getAttribute("name") == name) {
+                returns[returns.length] = e[i];
+            }
+        }
+        return returns;
+    }
+        //IE7及以下兼容性解决办法 end
+    var e5 = getElementsByName("div","div1")[0];
+    //4、    根据name获得元素start
+    document.body.innerHTML += "e1=" + e1.innerText+ ",e2=" + e2.innerText + ",e3=" + e3.innerText + ",e4=" +e4.innerText + ",e5=" +e5.innerText ;
+</script>
+</html>

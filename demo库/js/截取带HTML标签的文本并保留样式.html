@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>截取带HTML标签的文本并保留样式</title>
+</head>
+<body>
+
+
+    <script type="text/javascript">
+        /**
+         * 文件名：SubHtml.js
+         * 作　者：DHC
+         * 说　明：带HTML标签根据HTML内容截取指定长度的HTML文本，并自动补齐截取后的标签
+         * 版　本：1.0
+         * 时　间：2014-02-24
+         * 示　例：subHtml($("#div715").html(), 73, false)
+         */
+        (function(o){
+            /**
+             * 判断数组中是否包含某个元素
+             */
+            Array.prototype.inArray = function(v){
+                for(i=0; i < this.length; i++) {
+                    if(this[i] == v){
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            /**
+             * 将HTML字符串里面的文本字符检出
+             */
+            o.toText = function(oHtml){
+                if(typeof oHtml === "string"){
+                    return oHtml.replace(/(^\s*)|(\s*$)/g, "").replace(/<[^<^>]*>/g, "").replace(/[\r\n]/g, "");
+                } else {
+                    return "";
+                }
+            };
+
+            /**
+             * 截取带HTML样式的字符串，并保留并自动补齐HTML标签
+             * oHtml  将要截取的HTML字符串
+             * nlen   截取后的长度，不包含标签的长度
+             * isByte 是否按照字节长度截取
+             */
+            o.subHtml = function(oHtml, nlen, isByte){
+
+                var returnValue = new Array();
+                var rgx1 = /<[^<^>^\/]+>/;      //前标签或者不规则的自标签(<a>的href属性中可能会有“//”符号，需要先移除才能保证rgx1的正确)
+                var rgx2 = /<\/[^<^>^\/]+>/;    //后标签
+                var rgx3 = /<[^<^>^\/]+\/>/;    //自标签
+                var rgx4 = /<[^<^>]+>/;         //所有标签
+                var selfTags = "hr,br,img,input,meta".split(",");
+                if(typeof oHtml !== "string"){
+                    return "";
+                }
+                oHtml = oHtml.replace(/(^\s*)|(\s*$)/g, "").replace(/[\r\n]/g, ""); //去字符串头尾空格，去换行符与回车符
+                var oStr = oHtml.replace(/<[^<^>]*>/g, ""); //移除所有标签，存入oStr
+                returnValue[0] = oStr.length;
+                var olen = isByte ? oStr.replace(/[^\x00-\xff]/g,"**").length : oStr.length; //oStr.replace(/[^\x00-\xff]/g,"**") 表示用十六进制匹配出所有双字节字符(包括汉字在内),然后替换成"**"（刚好两个字节）
+                if(!/^\d+$/.test(nlen) || olen <= nlen){
+                    returnValue[1] = oHtml;
+                    return returnValue;
+                }
+
+                //保存所有标签的位置及标签名 start
+                var tStr = oHtml;
+                var index = 0;
+                var matchs = new Array();
+                while(rgx4.test(tStr)){
+                    var m = new Object();
+                    m.index = index + tStr.search(rgx4);    //查找所有标签，并保存标签第一个字母的位置
+                    m.string = tStr.match(rgx4).toString(); //保存标签名
+                    var len = tStr.search(rgx4)+tStr.match(rgx4)[0].length; //保存标签名最后一个字母距离被查找的字符串首字母的长度
+                    tStr = tStr.substr(len);    //去掉找到的标签及标签之前的子串
+                    index += len;   //保存新串首字母在原字符串中的位置
+                    matchs.push(m);
+                }
+                //保存所有标签的位置及标签名 end
+
+                //取得指定长度的纯文本start
+                if(isByte){
+                    var i=0;
+                    for(var z = 0; z < oStr.length; z++){
+                        i += (oStr.charCodeAt(z) > 255) ? 2 : 1;
+                        if(i >= nlen){
+                            tStr=oStr.slice(0,(z + 1)); //因为slice(begin,end)的end位置是不取的，所以z要加1
+                            break;
+                        }
+                    }
+                } else {
+                    tStr = oStr.substr(0, nlen);
+                }
+                //取得指定长度的纯文本end
+
+                var startTags = new Array();
+                for(var i = 0; i < matchs.length; i++){
+                    if(tStr.length <= matchs[i].index){
+                        //tStr += matchs[i].string;
+                        matchs = matchs.slice(0, i);    //选取matchs[0]到matcchs[i-1]
+                        break;
+                    } else {
+
+                        //给取得的纯文本加上原先的标签 start
+                        tStr = tStr.substring(0, matchs[i].index) + matchs[i].string + tStr.substr(matchs[i].index);
+                        if(rgx1.test(matchs[i].string.replace(/(\/\/)/g, ""))){     //判断是否前标签或者不规则的自标签(先移除了<a>的href属性中可能的“//”符号)
+                            var name = matchs[i].string.replace(/[<>]/g, "").split(" ");    //去掉<>号，取得标签名与属性并分离存入数组
+                            if(name.length > 0){
+                                name = name[0];     //取得标签名
+                                if(!selfTags.inArray(name)){
+                                    startTags.push(name);   //储存前标签名字到栈中
+                                }
+                            }
+                        } else if(rgx2.test(matchs[i].string)){
+                            var name = matchs[i].string.replace(/[<\/>]/g, "");
+                            if(startTags.length > 0 && startTags[startTags.length - 1] === name){
+                                startTags.pop();    //每添加上一个后标签，就取掉栈中对应的前标签
+                            }
+                        }
+                        //给取得的纯文本加上原先的标签 end
+
+                    }
+                }
+
+                //如果在截取的文本之后还有已添加的前标签对应的后标签没有加上，则全部添加上。 start
+                if(startTags.length > 0){
+                    for(var i = startTags.length - 1; i >=0; i--){
+                        tStr += '</' + startTags[i] + '>';
+                    }
+                }
+                //如果在截取的文本之后还有已添加的前标签对应的后标签没有加上，则全部添加上。 end
+                returnValue[1] =tStr;
+                return returnValue;
+            }
+        }(window));
+
+        var str = "<div><br/>结果你看，党和政府从高富帅手里抠出钱来，给矮矬穷们提供机会证明自己并不是只能跪舔高富帅的劣等人种，结果后者还推三阻四，真是脑子瓦特了。<br/><br/><br/>最后是两学一做时间：<br/><blockquote>中国足协前主席年维泗回忆，上世纪50年代末开始，中央领导人夏天到北戴河避暑办公，家属和孩子也会随行，董必武、叶剑英、习仲勋的孩子们都一起在北戴河组队踢球。期间，这个小足球队还同驻中国外交使团的孩子们比赛，最初输了比赛，还从国家队请了教练去指导。指导过后，进步很快，最后还踢赢了。</blockquote><br/><br/>作者：玄不救非氪不改命<br/>链接：https://www.zhihu.com/question/49119944/answer/115794642<br/>来源：知乎<br/>著作权归作者所有，转载请联系作者获得授权。</div><p><br/></p>";
+        str = subHtml(str,96,false);
+        if(str[0] > 100)
+            alert(str[1]);
+    </script>
+</body>
+</html>

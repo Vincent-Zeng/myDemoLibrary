@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>知乎评论按钮悬挂功能</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+        }
+        p{
+            width:300px;
+            height:100px;
+            background:red;
+        }
+        div{
+            width:300px;
+            height:100px;
+            background: green;
+        }
+    </style>
+</head>
+<body>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+
+    <p>p</p>
+    <div>div</div>
+
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+    <h1>1</h1>
+
+    <script>
+        var p = document.getElementsByTagName("p")[0];
+        var div = document.getElementsByTagName("div")[0];
+        var rect;
+        var rect2;
+
+        document.onscroll = function () {
+            rect = div.getBoundingClientRect();
+
+            if(rect.top-100 <= 0)
+            {
+                p.setAttribute("style","position:fixed;top:0px;");  // fixed元素的top是相对于可视区。
+                div.setAttribute("style","margin-top:100px");   //margin-top是相对于元素上方的元素。
+
+                if(rect.bottom <= 0)
+                {
+                    p.setAttribute("style","");
+                    div.setAttribute("style","");
+                }
+            }
+            if(rect.top-100 > 0)
+            {
+                p.setAttribute("style","");
+                div.setAttribute("style","");
+            }
+
+
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>分页</title>
+    <style>
+        .pageBar li{
+            float:left;
+            list-style: none;
+            margin:0 4px;
+        }
+
+        .pageBar li a{
+            padding:6px 12px;
+            border:1px solid lightgray;
+            text-decoration: none;
+            color:#666;
+        }
+
+        .pageBar li a:hover{
+            background-color: #fde3ef;
+            color:red;
+            border:1px solid red;
+        }
+
+        .except input[type="text"]{
+            padding:6px 6px;
+            border:1px solid lightgray;
+            color:#666;
+            margin-top:-6px;
+            width:20px;
+
+        }
+
+        .except input[type="button"]{
+            padding:6px 6px;
+            border:1px solid lightgray;
+            color:#666;
+            margin-top:-6px;
+            width:60px;
+            background:none;
+        }
+
+        .except input[type="button"]:hover{
+            border-color: #aaa;
+            background:#eee;
+            cursor:pointer;
+        }
+
+        .except input[type="button"]:active{
+            border-color: #888;
+        }
+
+        .focus{
+            background-color: #fde3ef;
+            color:red;
+            border:1px solid red !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="pageBar">
+        <ul>
+            <li><a href="javascript:void(0);" id="firstPage">首页</a></li>
+            <li><a href="javascript:void(0);" id="prevPage">上一页</a></li>
+            <li><a href="javascript:void(0);" class="pageNumber focus" pageNumber_id="1" id="pageNumber1">1</a></li>
+            <li><a href="javascript:void(0);" class="pageNumber" pageNumber_id="2" id="pageNumber2">2</a></li>
+            <li><a href="javascript:void(0);" class="pageNumber" pageNumber_id="3" id="pageNumber3">3</a></li>
+            <li><a href="javascript:void(0);" class="pageNumber" pageNumber_id="4" id="pageNumber4">4</a></li>
+            <li><a href="javascript:void(0);" class="pageNumber" pageNumber_id="5" id="pageNumber5">5</a></li>
+            <li><a href="javascript:void(0);" id="nextPage">下一页</a></li>
+            <li><a href="javascript:void(0);" id="endPage">尾页</a></li>
+            <li>共 100 页</li>
+            <li class="except">    <span>到第</span>  <input type="text" id="targetPage"/>  <span>页</span> </li>
+            <li class="except">    <input type="button" value="确定" id="pageJumpButton"/>    </li>
+            <input type="text" value="1" name="nowPage" style="display:none;" AUTOCOMPLETE="off">   <!--添加AUTOCOMPLETE="off"，避免火狐保存文本框内容而使得页面刷新后文本框value可能为最大页码值（这导致焦点虽然在页码1上，但点击下一页无反应）。-->
+        </ul>
+    </div>
+
+    <script>
+        var maxPageNum = 100;
+        var pageNumber = document.getElementsByClassName("pageNumber");
+
+        //添加每个页码的点击事件 start
+        for(var i = 0;i < pageNumber.length;i++){
+            pageNumber[i].onclick = function () {
+                var oldNum = this.innerText;
+            //alert(document.getElementsByName("nowPage")[0].value);
+                document.getElementsByName("nowPage")[0].value = oldNum;    //把当前点击的页码存入隐藏表单元素中
+            //alert(document.getElementsByName("nowPage")[0].value);
+
+                //使得选中的页码在页码中居中 start               ————mark1
+                for(var i = 0;i < pageNumber.length;i++)
+                {
+                    pageNumber[i].innerText = new Number(pageNumber[i].innerText) + new Number(this.getAttribute("pageNumber_id")) - 3;
+                }
+                //使得选中的页码在页码中居中 end
+
+                //如果因为mark1的语句造成页码 < 1或超出最大页码，则回滚到页码1或最大页码。 start
+                if( new Number(  document.getElementById("pageNumber1").innerText  ) < 1 ){
+                    var count =  1 - new Number(  document.getElementById("pageNumber1").innerText )  ;
+                    for(var i = 0;i < pageNumber.length;i++)
+                    {
+                        pageNumber[i].innerText = new Number(pageNumber[i].innerText) + count;
+                    }
+                }
+
+                if( new Number(  document.getElementById("pageNumber5").innerText  ) > maxPageNum ){
+                    var count =  maxPageNum - new Number(  document.getElementById("pageNumber5").innerText  ) ;
+                    for(var i = 0;i < pageNumber.length;i++)
+                    {
+                        pageNumber[i].innerText = new Number(pageNumber[i].innerText) + count;
+                    }
+                }
+                //如果因为mark1的语句造成页码 < 1或超出最大页码，则回滚到页码1或最大页码。 end
+
+                //给选中的页码加上样式 start
+                for(var i = 0; i < pageNumber.length;i++)
+                {
+                    if(oldNum == pageNumber[i].innerText )
+                    {
+                        pageNumber[i].setAttribute("class","pageNumber focus");
+                    }else
+                    {
+                        pageNumber[i].setAttribute("class","pageNumber");
+                    }
+                }
+                //给选中的页码加上样式 end
+
+
+            }
+        }
+        //添加每个页码的点击事件 end
+
+        //添加前一页和后一页的点击事件 start
+        document.getElementById("prevPage").onclick = function(){
+            if(  new Number(document.getElementsByName("nowPage")[0].value) > 1 )
+            {
+                for(var i = 0;i < pageNumber.length;i++)
+                {
+                    pageNumber[i].innerText = new Number(pageNumber[i].innerText)  - 1;
+                }
+
+                if( new Number(  document.getElementById("pageNumber1").innerText  ) < 1 ){
+                    var count =  1 - new Number(  document.getElementById("pageNumber1").innerText )  ;
+                    for(var i = 0;i < pageNumber.length;i++)
+                    {
+                        pageNumber[i].innerText = new Number(pageNumber[i].innerText) + count;
+                    }
+                }
+
+                document.getElementsByName("nowPage")[0].value = new Number(document.getElementsByName("nowPage")[0].value) - 1;
+            //alert(document.getElementsByName("nowPage")[0].value);
+
+                //给选中的页码加上样式 start
+                for(var i = 0; i < pageNumber.length;i++)
+                {
+                    if(new Number(document.getElementsByName("nowPage")[0].value) == pageNumber[i].innerText )
+                    {
+                        pageNumber[i].setAttribute("class","pageNumber focus");
+                    }else
+                    {
+                        pageNumber[i].setAttribute("class","pageNumber");
+                    }
+                }
+                //给选中的页码加上样式 end
+
+            }
+        }
+
+
+
+
+
+        document.getElementById("nextPage").onclick = function(){
+            if(  new Number(document.getElementsByName("nowPage")[0].value) < maxPageNum )
+            {
+                for(var i = 0;i < pageNumber.length;i++)
+                {
+                    pageNumber[i].innerText = new Number(pageNumber[i].innerText) + 1;
+                }
+
+                if( new Number(  document.getElementById("pageNumber5").innerText  ) > maxPageNum ){
+                    var count =  maxPageNum - new Number(  document.getElementById("pageNumber5").innerText  ) ;
+                    for(var i = 0;i < pageNumber.length;i++)
+                    {
+                        pageNumber[i].innerText = new Number(pageNumber[i].innerText) + count;
+                    }
+                }
+
+                document.getElementsByName("nowPage")[0].value = new Number(document.getElementsByName("nowPage")[0].value) + 1;
+            //alert(document.getElementsByName("nowPage")[0].value);
+                //alert(document.getElementsByName("nowPage")[0].value);
+
+                //给选中的页码加上样式 start
+                for(var i = 0; i < pageNumber.length;i++)
+                {
+                    if(new Number(document.getElementsByName("nowPage")[0].value) == pageNumber[i].innerText )
+                    {
+                        pageNumber[i].setAttribute("class","pageNumber focus");
+                    }else
+                    {
+                        pageNumber[i].setAttribute("class","pageNumber");
+                    }
+                }
+                //给选中的页码加上样式 end
+
+            }
+        }
+        //添加前一页和后一页的点击事件 end
+
+        //设置首页尾页点击事件 start
+        document.getElementById("firstPage").onclick = function () {
+            for(var i = 0; i < pageNumber.length;i++)
+            {
+                pageNumber[i].innerText = i + 1;
+                pageNumber[i].setAttribute("class","pageNumber");
+            }
+            pageNumber[0].setAttribute("class","pageNumber focus");
+            document.getElementsByName("nowPage")[0].value = 1;
+        }
+
+        document.getElementById("endPage").onclick = function () {
+            for(var i = 0; i < pageNumber.length;i++)
+            {
+                pageNumber[i].innerText = maxPageNum - pageNumber.length + ( i + 1 );
+                pageNumber[i].setAttribute("class","pageNumber");
+            }
+            pageNumber[4].setAttribute("class","pageNumber focus");
+            document.getElementsByName("nowPage")[0].value = maxPageNum;
+        }
+        //设置首页尾页点击事件 end
+
+        //设置跳页点击事件 start
+        document.getElementById("pageJumpButton").onclick = function () {
+            var targetPage = document.getElementById("targetPage").value;
+            if( new Number(targetPage) > maxPageNum || new Number(targetPage) < 1)
+            {
+                alert("没有此页");
+                return;
+            }
+
+            document.getElementsByName("nowPage")[0].value = targetPage;
+        //alert(document.getElementsByName("nowPage")[0].value);
+
+            for(var i = 0; i < pageNumber.length;i++)
+            {
+                pageNumber[i].innerText = new Number( targetPage )  - 2 + i;
+                pageNumber[i].setAttribute("class","pageNumber");
+            }
+            pageNumber[2].setAttribute("class","pageNumber focus");
+
+            if( new Number(  document.getElementById("pageNumber5").innerText  ) > maxPageNum ){
+                var count =  maxPageNum - new Number(  document.getElementById("pageNumber5").innerText  ) ;
+                for(var i = 0;i < pageNumber.length;i++)
+                {
+                    pageNumber[i].innerText = new Number(pageNumber[i].innerText) + count;
+                }
+            }
+
+            if( new Number(  document.getElementById("pageNumber1").innerText  ) < 1 ){
+                var count =  1 - new Number(  document.getElementById("pageNumber1").innerText )  ;
+                for(var i = 0;i < pageNumber.length;i++)
+                {
+                    pageNumber[i].innerText = new Number(pageNumber[i].innerText) + count;
+                }
+            }
+
+            //给选中的页码加上样式 start
+            for(var i = 0; i < pageNumber.length;i++)
+            {
+                if(new Number(document.getElementsByName("nowPage")[0].value) == pageNumber[i].innerText )
+                {
+                    pageNumber[i].setAttribute("class","pageNumber focus");
+                }else
+                {
+                    pageNumber[i].setAttribute("class","pageNumber");
+                }
+            }
+            //给选中的页码加上样式 end
+        }
+        //设置跳页点击事件 end
+    </script>
+
+</body>
+</html>

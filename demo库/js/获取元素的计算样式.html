@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>获取元素的计算样式</title>
+    <style>
+        div{
+            width:100px;
+            margin-top:10px;
+        }
+    </style>
+</head>
+<body>
+    <div style="margin-top: 20px;">
+
+    </div>
+    <script>
+        //得到目标的最终样式的函数 start
+        function getStyle(obj, name)
+        {
+            if(obj.currentStyle)
+            {
+                return obj.currentStyle[name];	//IE
+            }
+            else
+            {
+                return getComputedStyle(obj, null)[name];
+            }
+        }
+        //得到目标的最终样式的函数 end
+        alert( getStyle(document.getElementsByTagName("div")[0],"width") );
+        alert( getStyle(document.getElementsByTagName("div")[0],"marginTop") );
+    </script>
+</body>
+</html>

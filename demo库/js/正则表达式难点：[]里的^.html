@@ -1,0 +1,30 @@
+<!--
+    基础概念：
+        [^abc]: 查找任何　【不是方括号之中的所有字符，即ａ、ｂ、ｃ之外的所有字符】　的字符。[]只能代表一个字符.[abc]相当于（a|b|c)
+        ^n:ｎ在被查找的字符串当中必须是首字符。
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        var str = "ae h ea a l f";
+        var reg1 = /[^hel]/g;   //
+        var reg2 = /[^h^e^l]/g;
+        var reg3 = /[^he^l]/g;
+
+        var reg4 = /[h^e^l]/g;
+
+        alert("reg1:" + str.match(reg1));
+        alert("reg2:" + str.match(reg2) );
+        alert("reg3:" + str.match(reg3) );
+        alert("reg4:" + str.match(reg4) );
+
+        //因此得出结论[^要连在一起看（不能拆成[和^看）而除了[^的^之外，其他^都是无效的。
+    </script>
+</head>
+<body>
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>获取元素在可视区的坐标</title>
+
+    <style>
+        #p1{
+            width:100px;
+            height: 100px;
+            background: red;
+        }
+        #p2{
+            width:100px;
+            height: 100px;
+            background: green;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <p id="p1">1</p>
+</div>
+<h1>1</h1>
+<h1>1</h1>
+<h1>1</h1>
+<h1>1</h1>
+<h1>1</h1>
+<h1>1</h1>
+<h1>1</h1>
+<h1>1</h1>
+<h1>1</h1>
+<h1>1</h1>
+<h1>1</h1>
+<h1>1</h1>
+<h1>1</h1>
+
+<script>
+    /*
+     基础概念：
+     The Element.getBoundingClientRect() method returns the size of an element and its position relative to the viewport.
+     var rect = elem.getBoundingClientRect();    // rect is a DOMRect object with eight properties: left, top, right, bottom, x, y, width, height
+     */
+
+    var rect = document.getElementById("p1").getBoundingClientRect();
+    alert("(left,top)=(" + rect.left + "," + rect.top + ")");
+
+    window.setTimeout(function(){
+        var rect = document.getElementById("p1").getBoundingClientRect(); //每次getBoundingClientRect()都只能get到当时的位置，所以这里需要重新getBoundingClientRect()
+        alert("(left,top)=(" + rect.left + "," + rect.top + ")");
+    },2000);
+</script>
+</body>
+</html>

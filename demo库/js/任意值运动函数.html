@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>任意值运动函数</title>
+<style>
+	div {
+		width:200px; height:200px; margin:20px; float:left; background:yellow; border:10px solid black; filter:alpha(opacity:30); opacity:0.3;
+	}
+
+</style>
+<script>
+window.onload=function ()
+{
+	var oDiv1=document.getElementById('div1');
+	
+	oDiv1.onmouseover=function ()
+	{
+		startMove(this, 'opacity', 100);
+	};
+	oDiv1.onmouseout=function ()
+	{
+		startMove(this, 'opacity', 30);
+	};
+};
+
+//得到目标的最终样式的函数 start
+function getStyle(obj, name)
+{
+	if(obj.currentStyle)
+	{
+		return obj.currentStyle[name];	//IE
+	}
+	else
+	{
+		return getComputedStyle(obj, null)[name];
+	}
+}
+//得到目标的最终样式的函数 end
+
+function startMove(obj, attr, iTarget)
+{
+	clearInterval(obj.timer);		//关闭以前该目标开过的定时器（如果不关，多次执行startMove就会开多个定时器），以免多个定时器同时运行，造成问题（比如定时器里的函数是每个周期对一个全局变量加1，如果开了两个定时器就变成加2了）
+	obj.timer=setInterval(function (){
+		var cur=0;
+		
+		if(attr=='opacity')
+		{
+			cur=Math.round(parseFloat(getStyle(obj, attr))*100);	//因为电脑存的只是小数的近似值，比如0.07存储值可能是0.0070000000000001,所以0.07*100不为7，所以需要四舍五入。否则会造成透明度在目标值附近晃动。
+		}
+		else
+		{
+			cur=parseInt(getStyle(obj, attr));
+		}
+		
+		var speed=(iTarget-cur)/6;		//速度逐渐减小，直到为0.（缓冲运动）
+		speed=speed>0?Math.ceil(speed):Math.floor(speed);		//计算机能显示的最小单位为像素，因此会把如100.9当成100处理，-10.1当成-10处理（去除小数部分），因此当speed为0~1之间的小数时目标就不运动了。因此要先把speed进1.
+		
+		if(cur==iTarget)
+		{
+			clearInterval(obj.timer);
+		}
+		else
+		{
+			if(attr=='opacity')
+			{
+				//改变透明度start
+				obj.style.filter='alpha(opacity:'+(cur +speed)+')';									//IE
+				obj.style.opacity=(cur+speed)/100;		//js是弱类型,1/100=0.01，而不像java下=0			//chrome 和 firefox
+				//改变透明度end
+
+			}
+			else
+			{
+				obj.style[attr]=cur+speed+'px';	//style.width只包括width，而不像offsetWidth包括了border和padding
+			}
+		}
+	}, 30);
+}
+</script>
+</head>
+
+<body>
+<div id="div1"></div>
+</body>
+</html>
